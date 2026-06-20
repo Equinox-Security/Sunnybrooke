@@ -8,64 +8,31 @@
 <link rel="manifest" href="manifest.json"/>
 <link rel="icon" href="icon-192.png" type="image/png"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+<meta name="mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Sunnybrooke Condo Association"/>
 </head>
 <body>
-<div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:998;background:var(--primary);color:#fff;padding:0.85rem 1rem;font-size:0.85rem;align-items:center;justify-content:space-between;gap:0.75rem;box-shadow:0 -2px 12px rgba(0,0,0,0.18);"><span id="pwa-install-text" style="flex:1;line-height:1.4;"></span><div style="display:flex;gap:0.5rem;flex-shrink:0;align-items:center;"><button id="pwa-install-btn" style="display:none;background:#fff;color:var(--primary);border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Install</button><button id="pwa-install-dismiss" aria-label="Dismiss" style="background:rgba(255,255,255,0.18);color:#fff;border:none;border-radius:6px;padding:0.45rem 0.7rem;font-size:0.82rem;cursor:pointer;font-family:inherit;">&times;</button></div></div><script>(function(){
-  function initBanner(){
-  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.matchMedia("(display-mode: fullscreen)").matches || window.navigator.standalone === true || document.referrer.indexOf("android-app://") === 0;
-  if (isStandalone) return;
-  var KEY = "pwaInstallDismissedAt";
-  var last = localStorage.getItem(KEY);
-  var DAYS = 7;
-  if (last && (Date.now() - parseInt(last,10)) < DAYS*24*60*60*1000) return;
-  var banner = document.getElementById("pwa-install-banner");
-  var textEl = document.getElementById("pwa-install-text");
-  var installBtn = document.getElementById("pwa-install-btn");
-  var dismissBtn = document.getElementById("pwa-install-dismiss");
-  if (!banner) return;
-  var ua = navigator.userAgent;
-  var isMobile = /android|iphone|ipad|ipod/i.test(ua) || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform));
-  if (!isMobile) return;
-  var isIOS = /iphone|ipad|ipod/i.test(ua);
-  var deferredPrompt = null;
-  if (isIOS) {
-    textEl.textContent = "Add this site to your Home Screen: tap the Share icon, then \"Add to Home Screen\".";
-    banner.style.display = "flex";
-  } else {
-    window.addEventListener("beforeinstallprompt", function(e){
-      e.preventDefault();
-      deferredPrompt = e;
-      textEl.textContent = "Install this site as an app for quick access.";
-      installBtn.style.display = "inline-block";
-      banner.style.display = "flex";
-    });
-  }
-  installBtn.addEventListener("click", function(){
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then(function(){
-      deferredPrompt = null;
-      banner.style.display = "none";
-    });
-  });
-  dismissBtn.addEventListener("click", function(){
-    banner.style.display = "none";
-    localStorage.setItem(KEY, Date.now().toString());
-  });
-  window.addEventListener("appinstalled", function(){
-    banner.style.display = "none";
-    localStorage.setItem(KEY, Date.now().toString());
-  });
-  }
-  if (document.readyState === "complete") { setTimeout(initBanner, 50); }
-  else { window.addEventListener("load", function(){ setTimeout(initBanner, 50); }); }
-})();</script>
+
 
 <script>
   function toggleMenu(){var nl=document.getElementById("nav-links");if(nl)nl.classList.toggle("open");}
+  var deferredInstallPrompt=null;
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();deferredInstallPrompt=e;});
+  function installApp(){
+    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(isIOS){
+      alert("To install: tap the Share icon, then \"Add to Home Screen\".");
+      return;
+    }
+    if(deferredInstallPrompt){
+      deferredInstallPrompt.prompt();
+      deferredInstallPrompt.userChoice.then(function(){deferredInstallPrompt=null;});
+    } else {
+      alert("To install: open your browser menu and choose \"Install app\" or \"Add to Home Screen\".");
+    }
+  }
 </script>
 <nav>
   <div class="nav-inner">
@@ -74,6 +41,7 @@
       <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
     <ul class="nav-links" id="nav-links">
+      <li class="nav-install-item"><a href="#" onclick="installApp();return false;">Install The SCA App!</a></li>
       <li><a href="index.html">Home</a></li>
       <li><a href="documents.html">Documents</a></li>
       <li><a href="vendors.html">Preferred Vendors</a></li>

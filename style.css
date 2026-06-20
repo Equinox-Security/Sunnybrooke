@@ -24,6 +24,7 @@ nav{background:#1e3a5f;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rg
 body.no-stripe .nav-brand-row{border-bottom:none!important}
 .nav-brand{font-family:Georgia,serif;font-size:1rem;color:#fff;text-decoration:none;text-align:center;flex:1}
 .nav-links{display:flex;justify-content:center;gap:0;list-style:none;padding:0.15rem 0}
+.nav-install-item{display:none}
 .nav-links a{color:rgba(255,255,255,0.82);text-decoration:none;font-size:0.875rem;padding:0.4rem 0.85rem;border-radius:4px;transition:color 0.2s,background 0.2s}
 .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.15)}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:11px;flex-shrink:0}
@@ -126,6 +127,8 @@ footer a,footer a:visited,footer a:link{color:rgba(255,255,255,0.8);text-decorat
   .nav-links a:last-child{border-bottom:none}
   .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,0.1)}
   .nav-links a:active{background:rgba(255,255,255,0.18)}
+  .nav-install-item{display:block!important}
+  .nav-install-item a{text-decoration:underline!important;font-weight:700;color:#fff!important}
   .hero-img{height:296px}
   .quick-links{grid-template-columns:1fr 1fr}
   .container{padding:1.5rem 1rem}
