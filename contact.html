@@ -13,7 +13,52 @@
 <meta name="apple-mobile-web-app-title" content="Sunnybrooke Condo Association"/>
 </head>
 <body>
-
+<div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:998;background:var(--primary);color:#fff;padding:0.85rem 1rem;font-size:0.85rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;box-shadow:0 -2px 12px rgba(0,0,0,0.18);"><span id="pwa-install-text" style="flex:1;line-height:1.4;"></span><div style="display:flex;gap:0.5rem;flex-shrink:0;align-items:center;"><button id="pwa-install-btn" style="display:none;background:#fff;color:var(--primary);border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Install</button><button id="pwa-install-dismiss" aria-label="Dismiss" style="background:rgba(255,255,255,0.18);color:#fff;border:none;border-radius:6px;padding:0.45rem 0.7rem;font-size:0.82rem;cursor:pointer;font-family:inherit;">&times;</button></div></div><script>(function(){
+  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  if (isStandalone) return;
+  var KEY = "pwaInstallDismissedAt";
+  var last = localStorage.getItem(KEY);
+  var DAYS = 7;
+  if (last && (Date.now() - parseInt(last,10)) < DAYS*24*60*60*1000) return;
+  var banner = document.getElementById("pwa-install-banner");
+  var textEl = document.getElementById("pwa-install-text");
+  var installBtn = document.getElementById("pwa-install-btn");
+  var dismissBtn = document.getElementById("pwa-install-dismiss");
+  if (!banner) return;
+  var ua = navigator.userAgent;
+  var isMobile = /android|iphone|ipad|ipod/i.test(ua) || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform));
+  if (!isMobile) return;
+  var isIOS = /iphone|ipad|ipod/i.test(ua);
+  var deferredPrompt = null;
+  if (isIOS) {
+    textEl.textContent = "Add this site to your Home Screen: tap the Share icon, then \"Add to Home Screen\".";
+    banner.style.display = "flex";
+  } else {
+    window.addEventListener("beforeinstallprompt", function(e){
+      e.preventDefault();
+      deferredPrompt = e;
+      textEl.textContent = "Install this site as an app for quick access.";
+      installBtn.style.display = "inline-block";
+      banner.style.display = "flex";
+    });
+  }
+  installBtn.addEventListener("click", function(){
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(function(){
+      deferredPrompt = null;
+      banner.style.display = "none";
+    });
+  });
+  dismissBtn.addEventListener("click", function(){
+    banner.style.display = "none";
+    localStorage.setItem(KEY, Date.now().toString());
+  });
+  window.addEventListener("appinstalled", function(){
+    banner.style.display = "none";
+    localStorage.setItem(KEY, Date.now().toString());
+  });
+})();</script>
 
 <script>
   function toggleMenu(){var nl=document.getElementById("nav-links");if(nl)nl.classList.toggle("open");}
