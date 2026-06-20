@@ -13,8 +13,9 @@
 <meta name="apple-mobile-web-app-title" content="Sunnybrooke Condo Association"/>
 </head>
 <body>
-<div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:998;background:var(--primary);color:#fff;padding:0.85rem 1rem;font-size:0.85rem;display:flex;align-items:center;justify-content:space-between;gap:0.75rem;box-shadow:0 -2px 12px rgba(0,0,0,0.18);"><span id="pwa-install-text" style="flex:1;line-height:1.4;"></span><div style="display:flex;gap:0.5rem;flex-shrink:0;align-items:center;"><button id="pwa-install-btn" style="display:none;background:#fff;color:var(--primary);border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Install</button><button id="pwa-install-dismiss" aria-label="Dismiss" style="background:rgba(255,255,255,0.18);color:#fff;border:none;border-radius:6px;padding:0.45rem 0.7rem;font-size:0.82rem;cursor:pointer;font-family:inherit;">&times;</button></div></div><script>(function(){
-  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+<div id="pwa-install-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:998;background:var(--primary);color:#fff;padding:0.85rem 1rem;font-size:0.85rem;align-items:center;justify-content:space-between;gap:0.75rem;box-shadow:0 -2px 12px rgba(0,0,0,0.18);"><span id="pwa-install-text" style="flex:1;line-height:1.4;"></span><div style="display:flex;gap:0.5rem;flex-shrink:0;align-items:center;"><button id="pwa-install-btn" style="display:none;background:#fff;color:var(--primary);border:none;border-radius:6px;padding:0.45rem 1rem;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:inherit;">Install</button><button id="pwa-install-dismiss" aria-label="Dismiss" style="background:rgba(255,255,255,0.18);color:#fff;border:none;border-radius:6px;padding:0.45rem 0.7rem;font-size:0.82rem;cursor:pointer;font-family:inherit;">&times;</button></div></div><script>(function(){
+  function initBanner(){
+  var isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.matchMedia("(display-mode: minimal-ui)").matches || window.matchMedia("(display-mode: fullscreen)").matches || window.navigator.standalone === true || document.referrer.indexOf("android-app://") === 0;
   if (isStandalone) return;
   var KEY = "pwaInstallDismissedAt";
   var last = localStorage.getItem(KEY);
@@ -58,6 +59,9 @@
     banner.style.display = "none";
     localStorage.setItem(KEY, Date.now().toString());
   });
+  }
+  if (document.readyState === "complete") { setTimeout(initBanner, 50); }
+  else { window.addEventListener("load", function(){ setTimeout(initBanner, 50); }); }
 })();</script>
 
 <script>
