@@ -128,7 +128,7 @@ footer a,footer a:visited,footer a:link{color:rgba(255,255,255,0.8);text-decorat
   .nav-links a:hover,.nav-links a.active{background:rgba(255,255,255,0.1)}
   .nav-links a:active{background:rgba(255,255,255,0.18)}
   .nav-install-item{display:block!important}
-  .nav-install-item a{text-decoration:underline!important;font-weight:700;color:#fff!important}
+  .nav-install-item a{text-decoration:underline!important;font-weight:700;color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.12)}
   .hero-img{height:296px}
   .quick-links{grid-template-columns:1fr 1fr}
   .container{padding:1.5rem 1rem}
