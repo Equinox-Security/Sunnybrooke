@@ -90,7 +90,7 @@ main{flex:1}
 .res-acc-body{display:none;border-top:1px solid var(--border);padding:1.25rem 1.4rem}
 .res-acc-card.open .res-acc-body{display:block}
 .dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
-.dir-card{background:var(--stone);border-radius:8px;padding:1.1rem 1.2rem;border-left:3px solid var(--accent)}
+.dir-card{background:var(--stone);border-radius:8px;padding:1.1rem 1.2rem;border-left:3px solid var(--primary)}
 .dir-name{font-family:Georgia,serif;font-size:0.975rem;color:var(--primary);font-weight:600;margin-bottom:0.15rem}
 .dir-address{font-size:0.78rem;color:var(--text-muted);margin-bottom:0.6rem;line-height:1.4}
 .dir-badge{display:inline-block;font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:0.15rem 0.5rem;border-radius:100px;margin-bottom:0.6rem}
