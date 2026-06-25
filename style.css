@@ -42,7 +42,7 @@ body.no-stripe .nav-brand-row{border-bottom:none!important}
 .info-item{display:flex;align-items:center;gap:0.5rem;color:var(--primary);font-size:0.85rem;font-weight:500}
 main{flex:1}
 .container{max-width:1100px;margin:0 auto;padding:2.25rem 1.5rem}
-.page-header{background:linear-gradient(135deg, #273c68 50%, #4791ff 100%);padding:2.5rem 1.5rem 2rem;text-align:center}
+.page-header{background:linear-gradient(135deg, #273c68 71%, #4791ff 100%);padding:2.5rem 1.5rem 2rem;text-align:center}
 .page-header h1{font-family:Georgia,serif;color:#fff;font-size:clamp(1.6rem,4vw,2.2rem);margin-bottom:0.3rem}
 .page-header p{color:rgba(255,255,255,0.65);font-size:0.9rem}
 .quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.25rem}
