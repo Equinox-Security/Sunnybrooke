@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Sunnybrooke Document Manager</title>
+  <style>
+    :root {
+      --forest: #2d5016;
+      --forest-light: #f0f5eb;
+      --accent: #7a9e4e;
+      --stone: #f4f1ec;
+      --border: #dde5d8;
+      --text: #1e2a1e;
+      --text-muted: #5a6b5a;
+      --white: #ffffff;
+      --shadow: 0 2px 12px rgba(45,80,22,0.1);
+      --red: #c0392b;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: var(--stone); color: var(--text); min-height: 100vh; }
+
+    #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+
+    .login-card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); padding: 2.5rem; width: 100%; max-width: 380px; text-align: center; }
+    .login-logo { width: 52px; height: 52px; background: var(--forest-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; color: var(--forest); }
+    .login-card h1 { font-family: Georgia, serif; font-size: 1.3rem; color: var(--forest); margin-bottom: 0.35rem; }
+    .login-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.75rem; }
+    .login-card input { width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.95rem; color: var(--text); background: var(--white); margin-bottom: 0.75rem; outline: none; transition: border-color 0.2s; }
+    .login-card input:focus { border-color: var(--forest); }
+    .login-error { font-size: 0.8rem; color: var(--red); margin-bottom: 0.75rem; display: none; }
+
+    #admin-screen { display: none; }
+
+    nav { background: var(--forest); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; }
+    .nav-brand { font-family: Georgia, serif; color: #fff; font-size: 1rem; }
+    .nav-brand span { font-size: 0.75rem; background: rgba(255,255,255,0.15); padding: 0.2rem 0.6rem; border-radius: 100px; margin-left: 0.75rem; font-family: -apple-system, sans-serif; letter-spacing: 0.05em; }
+    .btn-logout { background: rgba(255,255,255,0.15); border: none; color: #fff; font-size: 0.8rem; padding: 0.4rem 0.9rem; border-radius: 5px; cursor: pointer; transition: background 0.2s; }
+    .btn-logout:hover { background: rgba(255,255,255,0.25); }
+
+    .container { max-width: 760px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .section-title { font-family: Georgia, serif; font-size: 1.3rem; color: var(--forest); margin-bottom: 0.35rem; }
+    .section-sub { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.75rem; }
+
+    .form-card { background: var(--white); border-radius: 10px; box-shadow: var(--shadow); padding: 1.75rem; margin-bottom: 1.5rem; }
+    .form-card h2 { font-family: Georgia, serif; font-size: 1rem; color: var(--forest); margin-bottom: 1.25rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--border); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    input[type="text"], select { padding: 0.65rem 0.9rem; border: 1.5px solid var(--border); border-radius: 7px; font-size: 0.9rem; color: var(--text); background: var(--white); outline: none; transition: border-color 0.2s; width: 100%; }
+    input[type="text"]:focus, select:focus { border-color: var(--forest); }
+    .hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.4rem; border-radius: 7px; font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; transition: opacity 0.2s, transform 0.15s; }
+    .btn:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary { background: var(--forest); color: #fff; }
+    .btn-secondary { background: var(--forest-light); color: var(--forest); }
+    .btn-copy { background: var(--accent); color: #fff; }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.5rem; }
+
+    .output-box { display: none; margin-top: 1.5rem; background: var(--forest-light); border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .output-header { background: var(--forest); padding: 0.65rem 1rem; display: flex; align-items: center; justify-content: space-between; }
+    .output-header span { color: rgba(255,255,255,0.85); font-size: 0.8rem; letter-spacing: 0.04em; }
+    .output-code { padding: 1rem; font-family: 'Courier New', monospace; font-size: 0.82rem; color: var(--text); white-space: pre-wrap; word-break: break-all; line-height: 1.6; }
+    .output-instructions { background: #fff; border-top: 1px solid var(--border); padding: 1rem; font-size: 0.85rem; color: var(--text); line-height: 1.6; }
+    .output-instructions strong { color: var(--forest); }
+    .copy-success { font-size: 0.75rem; color: #a8d5a2; display: none; margin-left: 0.5rem; }
+
+    .instructions-card { background: var(--white); border-radius: 10px; box-shadow: var(--shadow); padding: 1.75rem; border-left: 4px solid var(--forest); }
+    .instructions-card h2 { font-family: Georgia, serif; font-size: 1rem; color: var(--forest); margin-bottom: 1rem; }
+    .step { display: flex; gap: 0.9rem; margin-bottom: 0.85rem; font-size: 0.875rem; line-height: 1.6; color: var(--text); }
+    .step-num { width: 24px; height: 24px; background: var(--forest); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .highlight { background: rgba(122,158,78,0.15); padding: 0.1rem 0.35rem; border-radius: 3px; font-family: monospace; font-size: 0.85em; }
+
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .container { padding: 1.5rem 1rem; } }
+  </style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h1>Sunnybrooke Admin</h1>
+    <p>Enter the admin password to continue</p>
+    <input type="password" id="password-input" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+    <div class="login-error" id="login-error">Incorrect password. Please try again.</div>
+    <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="checkPassword()">Sign In</button>
+  </div>
+</div>
+
+<div id="admin-screen">
+  <nav>
+    <div class="nav-brand">Sunnybrooke Condo Association <span>Admin</span></div>
+    <button class="btn-logout" onclick="logout()">Sign Out</button>
+  </nav>
+
+  <div class="container">
+    <div class="section-title">Document Entry Generator</div>
+    <p class="section-sub">Fill in the fields below to generate the HTML snippet, then follow the instructions to add it to documents.html.</p>
+
+    <div class="form-card">
+      <h2>New Document Details</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select id="category">
+            <option value="">— Select a category —</option>
+            <option value="governing">Governing Documents</option>
+            <option value="forms">Forms</option>
+            <option value="budgets">Approved Budgets</option>
+            <option value="newsletters">Newsletters</option>
+            <option value="annual">Annual Meeting Minutes</option>
+            <option value="quarterly">Quarterly Meeting Notes</option>
+            <option value="board">Board of Directors Meetings</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>File Type</label>
+          <select id="filetype">
+            <option value="PDF">PDF</option>
+            <option value="DOCX">DOCX</option>
+            <option value="DOC">DOC</option>
+            <option value="XLS">XLS</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Document Label</label>
+        <input type="text" id="label" placeholder="e.g. June 3, 2026  or  FY 2025  or  Fall 2025" />
+        <div class="hint">This is the text that will appear as the link in the list.</div>
+      </div>
+      <div class="form-group">
+        <label>File URL</label>
+        <input type="text" id="fileurl" placeholder="https://files.secure.website/... or just filename.pdf" />
+        <div class="hint">Paste the full URL to the uploaded file. If hosted in the same folder as the site, just enter the filename — e.g. <strong>minutes-june-2026.pdf</strong></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="generate()">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Generate Snippet
+        </button>
+        <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+      </div>
+
+      <div class="output-box" id="output-box">
+        <div class="output-header">
+          <span>Generated HTML — copy everything below</span>
+          <div style="display:flex; align-items:center;">
+            <button class="btn btn-copy" style="padding:0.3rem 0.8rem; font-size:0.78rem;" onclick="copySnippet()">Copy</button>
+            <span class="copy-success" id="copy-success">✓ Copied!</span>
+          </div>
+        </div>
+        <div class="output-code" id="output-code"></div>
+        <div class="output-instructions" id="output-instructions"></div>
+      </div>
+    </div>
+
+    <div class="instructions-card">
+      <h2>How to Add a Document — Step by Step</h2>
+      <div class="step"><div class="step-num">1</div><div>Upload your PDF (or DOCX etc.) to the same server folder where the site files live. Note the exact filename.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Fill in the form above — select the category, enter the label, and paste the file URL or filename.</div></div>
+      <div class="step"><div class="step-num">3</div><div>Click <strong>Generate Snippet</strong> then <strong>Copy</strong>.</div></div>
+      <div class="step"><div class="step-num">4</div><div>Open <span class="highlight">documents.html</span> in a text editor (Notepad on Windows works fine).</div></div>
+      <div class="step"><div class="step-num">5</div><div>Press <strong>Ctrl+F</strong> and search for the comment matching your category. Paste the snippet directly above that comment line.</div></div>
+      <div class="step"><div class="step-num">6</div><div>Find the <span class="highlight">acc-count</span> line for that section and increase the document count by 1.</div></div>
+      <div class="step"><div class="step-num">7</div><div>Save the file and upload it back to the server, replacing the old <span class="highlight">documents.html</span>. Done.</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // SHA-256 hash of the admin password — do not change this directly.
+  // Use hashgen.html to generate a new hash, then paste it here.
+  const ADMIN_HASH = 'e93cf73f017728b9d8061731f451600dc27241c3638afde38cbf87ec880488f7';
+
+  async function hashString(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+  }
+
+  async function checkPassword() {
+    const val = document.getElementById('password-input').value;
+    const hashed = await hashString(val);
+    if (hashed === ADMIN_HASH) {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-screen').style.display = 'block';
+    } else {
+      document.getElementById('login-error').style.display = 'block';
+      document.getElementById('password-input').value = '';
+      document.getElementById('password-input').focus();
+    }
+  }
+
+  function logout() {
+    document.getElementById('login-screen').style.display = 'flex';
+    document.getElementById('admin-screen').style.display = 'none';
+    document.getElementById('password-input').value = '';
+    clearForm();
+  }
+
+  const COMMENT_MAP = {
+    governing:   'ADD NEW GOVERNING DOCUMENTS ABOVE THIS LINE',
+    forms:       'ADD NEW FORMS ABOVE THIS LINE',
+    budgets:     'ADD NEW BUDGET ENTRIES ABOVE THIS LINE — newest year at top',
+    newsletters: 'ADD NEW NEWSLETTER ENTRIES ABOVE THIS LINE — newest at top',
+    annual:      'ADD NEW ANNUAL MEETING ENTRIES ABOVE THIS LINE — newest date at top',
+    quarterly:   'ADD NEW QUARTERLY MEETING ENTRIES ABOVE THIS LINE — newest date at top',
+    board:       'ADD NEW BOARD MEETING ENTRIES ABOVE THIS LINE — newest date at top',
+  };
+
+  const CATEGORY_LABELS = {
+    governing:   'Governing Documents',
+    forms:       'Forms',
+    budgets:     'Approved Budgets',
+    newsletters: 'Newsletters',
+    annual:      'Annual Meeting Minutes',
+    quarterly:   'Quarterly Meeting Notes',
+    board:       'Board of Directors Meetings',
+  };
+
+  function generate() {
+    const category = document.getElementById('category').value;
+    const label    = document.getElementById('label').value.trim();
+    const fileurl  = document.getElementById('fileurl').value.trim();
+    const filetype = document.getElementById('filetype').value;
+    if (!category) { alert('Please select a category.'); return; }
+    if (!label)    { alert('Please enter a document label.'); return; }
+    if (!fileurl)  { alert('Please enter the file URL or filename.'); return; }
+
+    const snippet =
+`<a class="doc-link" href="${fileurl}" target="_blank">
+  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  ${label}
+  <span class="doc-link-meta">${filetype}</span>
+</a>`;
+
+    document.getElementById('output-code').textContent = snippet;
+    document.getElementById('output-instructions').innerHTML =
+      `<strong>Where to paste this:</strong> Open <strong>documents.html</strong>, press <strong>Ctrl+F</strong> and search for:<br><br>
+      <span style="font-family:monospace; background:rgba(122,158,78,0.15); padding:0.2rem 0.4rem; border-radius:3px; font-size:0.85em;">${COMMENT_MAP[category]}</span><br><br>
+      Paste the snippet <strong>directly above</strong> that line. Then find the document count for <strong>${CATEGORY_LABELS[category]}</strong> and increase it by 1.`;
+    document.getElementById('output-box').style.display = 'block';
+    document.getElementById('copy-success').style.display = 'none';
+  }
+
+  function copySnippet() {
+    navigator.clipboard.writeText(document.getElementById('output-code').textContent).then(() => {
+      const el = document.getElementById('copy-success');
+      el.style.display = 'inline';
+      setTimeout(() => el.style.display = 'none', 2500);
+    });
+  }
+
+  function clearForm() {
+    document.getElementById('category').value = '';
+    document.getElementById('label').value = '';
+    document.getElementById('fileurl').value = '';
+    document.getElementById('filetype').value = 'PDF';
+    document.getElementById('output-box').style.display = 'none';
+  }
+</script>
+</body>
+</html>
