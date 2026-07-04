@@ -25,6 +25,7 @@ body.no-stripe .nav-brand-row{border-bottom:none!important}
 .nav-brand{font-family:Georgia,serif;font-size:1rem;color:#fff;text-decoration:none;text-align:center;flex:1}
 .nav-links{display:flex;justify-content:center;gap:0;list-style:none;padding:0.15rem 0}
 .nav-install-item{display:none}
+.nav-bio-item{display:none}
 .nav-links a{color:rgba(255,255,255,0.82);text-decoration:none;font-size:0.875rem;padding:0.4rem 0.85rem;border-radius:4px;transition:color 0.2s,background 0.2s}
 .nav-links a.active{color:#fff;background:rgba(255,255,255,0.15)}
 @media(hover:hover){.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.15)}}
@@ -140,6 +141,8 @@ footer a,footer a:visited,footer a:link{color:rgba(255,255,255,0.8);text-decorat
   .nav-links a:active{background:rgba(255,255,255,0.18)}
   .nav-install-item{display:block!important}
   .nav-install-item a{text-decoration:underline!important;font-weight:700;color:#fff!important;border-bottom:1px solid rgba(255,255,255,0.12)}
+  .nav-bio-item{display:block!important}
+  .nav-bio-item a{color:rgba(255,255,255,0.75)!important;border-bottom:1px solid rgba(255,255,255,0.12)}
   .hero-img{height:272px}
   .quick-links{grid-template-columns:1fr 1fr}
   .container{padding:1.5rem 1rem}
