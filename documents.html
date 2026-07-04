@@ -15,7 +15,7 @@
 <script>
   var DOC_HASH="dcf2363a0ff9ca541c2a77015618c3c4bacbf4e955a3cac2b89037fe3bab4e6f";
   var TEMP_HASH="1b8266ce3daba5697df54315a56bf476af6796ec998f3f377ab04f06fd1a8fec";
-  var TEMP_EXPIRY=1783261743149;
+  var TEMP_EXPIRY=1783201035599;
   async function checkDocPassword(){
     var val=document.getElementById("doc-password").value;
     var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(val));
@@ -30,19 +30,26 @@
       if(isTemp){
         var bar=document.getElementById("doc-temp-bar");
         if(bar){
-          var ms=TEMP_EXPIRY-now;
-          var hrs=Math.floor(ms/3600000);
-          var days=Math.floor(hrs/24);
-          var label=days>1?days+" days":(days===1?"1 day":(hrs>1?hrs+" hours":(hrs===1?"1 hour":"less than 1 hour")));
-          bar.querySelector(".temp-expiry-label").textContent="Temporary access — expires in "+label;
+          function updateTempLabel(){
+            var rem=TEMP_EXPIRY-Date.now();
+            if(rem<=0){signOutDoc();var el=document.getElementById("doc-login-error");if(el){el.textContent="Temporary access has expired.";el.style.display="block";}return;}
+            var mins=Math.floor(rem/60000);
+            var hrs=Math.floor(mins/60);
+            var days=Math.floor(hrs/24);
+            var label=days>1?days+" days":(days===1?"1 day":(hrs>1?hrs+" hours":(hrs===1?"1 hour":(mins>1?mins+" minutes":"less than 1 minute"))));
+            bar.querySelector(".temp-expiry-label").textContent="Temporary access — expires in "+label;
+          }
+          updateTempLabel();
           bar.style.display="block";
+          if(window._tempExpTimer)clearInterval(window._tempExpTimer);
+          window._tempExpTimer=setInterval(updateTempLabel,30000);
         }
       }
     } else {
       var e=document.getElementById("doc-login-error");if(e){e.style.display="block";document.getElementById("doc-password").value="";document.getElementById("doc-password").focus();}
     }
   }
-  function signOutDoc(){    document.getElementById("doc-login").style.display="flex";    document.getElementById("doc-content").style.display="none";    document.getElementById("doc-password").value="";    var fab=document.getElementById("doc-signout-fab");if(fab)fab.style.display="none";    var bar=document.getElementById("doc-temp-bar");if(bar)bar.style.display="none";  }
+  function signOutDoc(){    document.getElementById("doc-login").style.display="flex";    document.getElementById("doc-content").style.display="none";    document.getElementById("doc-password").value="";    var fab=document.getElementById("doc-signout-fab");if(fab)fab.style.display="none";    var bar=document.getElementById("doc-temp-bar");if(bar)bar.style.display="none";    if(window._tempExpTimer){clearInterval(window._tempExpTimer);window._tempExpTimer=null;}  }
   document.addEventListener("DOMContentLoaded",function(){    var i=document.getElementById("doc-password");    if(i)i.addEventListener("keydown",function(e){if(e.key==="Enter")checkDocPassword();});    var fab=document.createElement("button");    fab.id="doc-signout-fab";    fab.textContent="Sign Out";    fab.onclick=signOutDoc;    fab.style.cssText="position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;background:var(--primary);color:#fff;border:none;border-radius:100px;padding:0.5rem 1.25rem;font-size:0.82rem;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.2);font-family:inherit;display:none;";    document.body.appendChild(fab);  });
 </script>
 <script>
