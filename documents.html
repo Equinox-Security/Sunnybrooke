@@ -14,15 +14,13 @@
 <meta name="apple-mobile-web-app-title" content="Sunnybrooke Condo Association"/>
 <script>
   var DOC_HASH="dcf2363a0ff9ca541c2a77015618c3c4bacbf4e955a3cac2b89037fe3bab4e6f";
-  var TEMP_HASH="1b8266ce3daba5697df54315a56bf476af6796ec998f3f377ab04f06fd1a8fec";
-  var TEMP_EXPIRY=1783203717913;
   async function checkDocPassword(){
     var val=document.getElementById("doc-password").value;
     var buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(val));
     var hash=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,"0");}).join("");
     var now=Date.now();
     var isPrimary=(hash===DOC_HASH);
-    var isTemp=(typeof TEMP_HASH!=="undefined"&&hash===TEMP_HASH&&now<TEMP_EXPIRY);
+    var isTemp=false;
     if(isPrimary||isTemp){
       document.getElementById("doc-login").style.display="none";
       document.getElementById("doc-content").style.display="block";
@@ -132,6 +130,10 @@
     <div class="login-error" id="doc-login-error">Incorrect password. Please try again.</div>
     <button class="login-btn" onclick="checkDocPassword()">View Documents</button>
     <button type="button" id="doc-bio-btn" class="login-btn login-btn-alt" onclick="doc_unlockBio()">Unlock with Biometrics</button>
+    <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid rgba(0,0,0,0.08);text-align:left;">
+      <p style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-muted);margin-bottom:0.4rem;">Real Estate Professionals</p>
+      <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.5;margin-bottom:0;">Licensed agents representing a prospective buyer may request temporary document access by contacting the board through our <a href="contact.html" style="color:var(--primary);text-decoration:none;font-weight:600;">Contact page</a>. Please include your real estate license number in your message. Access requests are reviewed by the board.</p>
+    </div>
   </div>
 </div>
 <div id="doc-content">
